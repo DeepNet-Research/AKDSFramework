@@ -72,4 +72,5 @@ class TestCases(unittest.TestCase):
         self.assertEqual(self.linkedlist[3], 773)
 
 if __name__ == '__main__':
+    print('LinkedList tests running')
     unittest.main()

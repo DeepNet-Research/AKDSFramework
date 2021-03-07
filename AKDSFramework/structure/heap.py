@@ -1,6 +1,5 @@
 """
 Heap Implementation
-@author: theroyakash
 
 Heaps are advanced data structures and are mostly implemented using priority queues.
 They can be thought of as a tree-based structure, in which the tree is a complete binary tree.
@@ -29,24 +28,35 @@ class Heap:
         self.built = False
         self.size += 1
 
+    def delete_root(self):
+        if self.built:
+            root = self.heap[0]
+            del self.heap[0]
+            self.size -= 1
+            self.built = False
+            return root
+        else:
+            raise HeapNotBuildError
+
     def get_root(self):
-        """
-        Returning the root node value of the max heap in O(1) time.
+        r"""
+        Returning the root node value of the max heap in :math:`O(1)` time.
         Returns:
             - The root node which is the maximum value in the heap.
         """
         if self.built:
             return self.heap[0]
         else:
-            raise HeapNotBuildError('Heap is not built yet. Call .build() method on the heap then get the root value.')
+            raise HeapNotBuildError(
+                'Heap is not built yet. Call .build() method on the heap then get the root value.')
 
     def get_right_child(self, i):
         """
         Get right child for index i
-            Args:
-                - i (int): Index whose right child you want
-            Returns:
-                - Returns the right child of any node, if not possible returns None
+        Args:
+            - ``i`` (int): Index whose right child you want
+        Returns:
+            - Returns the right child of any node, if not possible returns None
         """
         right_index = i * 2 + 2
         if right_index < self.size:
@@ -56,11 +66,11 @@ class Heap:
 
     def get_left_child(self, i):
         """
-        Get right child's index for parent i
-            Args:
-                - i (int): Index whose left child's index you want
-            Returns:
-                - Returns the right child of any node, if not possible returns None
+        Get right child's index for parent ``i``
+        Args:
+            - ``i`` (int): Index whose left child's index you want
+        Returns:
+            - Returns the right child of any node, if not possible returns None
         """
         left_index = i * 2 + 1
         if left_index < self.size:
@@ -79,55 +89,62 @@ class Heap:
 
     def __str__(self):
         if not self.built:
-            print('The MaxHeap has not built yet or may have changed after a successful build, consider using the .build() method to build the heap first.')
-            raise HeapNotBuildError
+            raise HeapNotBuildError(
+                'The MaxHeap has not built yet or may have changed after a successful build, consider using the .build() method to build the heap first.')
         else:
             return str(self.heap)
 
     def prettyprint(self):
-        table = [
-            ['Head Node Value', 'left child', 'right child']
-        ]
+        if self.built:
+            table = [
+                ['Head Node Value', 'left child', 'right child']
+            ]
 
-        for i in range(len(self.heap) // 2):
-            entry = []
-            head = self.heap[i]
-            entry.append(head)
-            try:
-                lc = self.heap[i * 2 + 1]
-            except IndexError:
-                lc = 'None'
-            try:
-                rc = self.heap[i * 2 + 2]
-            except IndexError:
-                rc = 'None'
+            for i in range(len(self.heap) // 2):
+                entry = []
+                head = self.heap[i]
+                entry.append(head)
+                try:
+                    lc = self.heap[i * 2 + 1]
+                except IndexError:
+                    lc = 'None'
+                try:
+                    rc = self.heap[i * 2 + 2]
+                except IndexError:
+                    rc = 'None'
 
-            entry.append(str(lc))
-            entry.append(str(rc))
-            table.append(entry)
+                entry.append(str(lc))
+                entry.append(str(rc))
+                table.append(entry)
 
-        termtable = AsciiTable(table)
-        print(termtable.table)
+            termtable = AsciiTable(table)
+            print(termtable.table)
+        else:
+            raise HeapNotBuildError(
+                'The MaxHeap has not built yet or may have changed after a successful build, consider using the .build() method to build the heap first.')
 
 
 class MaxHeap(Heap):
     def __init__(self, array):
         """
         Heap Initialization with unsorted or sorted array whatever.
-            Args:
-                - array (list): Unsorted array to initialize the heap
+        Args:
+            - array (list): Unsorted array to initialize the heap
         """
         super(MaxHeap, self).__init__(array)
 
     def build(self):
-        """
+        r"""
         Build operation is called when the heap violates the heap property, Such as
         during adding new element at the end of heap with .add() method or initializing the heap
-        for the first time. This takes O(log N) time.
+        for the first time. Or deleting with ``delete_root()`` method. This takes upto :math:`O (N)` time per build.
+
+        Watch MIT 6.006 video on heap and heap sort to know more on build operations here https://youtu.be/B7hVxCmfPtM
         """
         self.size = len(self.heap)
         self.heap = list(self.heap)
         if self.size <= 1:
+            self.built = True
             return
 
         for i in range(self.size // 2 - 1, -1, -1):
@@ -135,8 +152,11 @@ class MaxHeap(Heap):
 
         self.built = True
 
-
     def heapify(self, index):
+        r"""
+        Correct a single violation of the heap property in subtree's root. This takes upto order :math:`O(\log n)` time.
+        Watch MIT 6.006 video on heap and heap sort to know more on build operations here https://youtu.be/B7hVxCmfPtM
+        """
         if index < self.size:
             largest = index
             left_child = self.get_left_child(index)
@@ -172,14 +192,17 @@ class MinHeap(Heap):
                 self.heapify(smallest)
 
     def build(self):
-        """
+        r"""
         Build operation is called when the heap violates the heap property, Such as
-        during adding new element at the end of heap with .add() method or initializing the heap
-        for the first time. This takes O(log N) time.
+        during adding new element at the end of heap with `.add()` method or initializing the heap
+        for the first time. Or deleting with ``delete_root()`` method. This takes :math:`O (N)` time per build.
+
+        Watch MIT 6.006 video on heap and heap sort to know more on build operations here https://youtu.be/B7hVxCmfPtM
         """
         self.size = len(self.heap)
         self.heap = list(self.heap)
         if self.size <= 1:
+            self.built = True
             return
 
         for i in range(self.size // 2 - 1, -1, -1):

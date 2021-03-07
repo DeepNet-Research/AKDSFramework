@@ -66,4 +66,5 @@ class TestQueue(unittest.TestCase):
 
 
 if __name__ == '__main__':
+    print('Heap tests running')
     unittest.main()

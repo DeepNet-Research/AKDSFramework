@@ -13,8 +13,8 @@ class Node:
     def __init__(self, value):
         """
         Node class for linked list. Each element of a linked list is called a node.
-            Args:
-                - value (Any): For each node this attribute will carry the value
+        Args:
+            - value (Any): For each node this attribute will carry the value
         """
         self.value = value
         self.next = None
@@ -31,10 +31,10 @@ class SinglyLinkedList:
     def add(self, value, at_end=True, position=0):
         """
         Adds any element to the linked list
-            Args:
-                - value (Any): Put in the value you want to add.
-                - at_end (bool): If you want to add to the end of the list leave this blank. Defaults to adding at the end.
-                - position (int): If you choose ``at_end`` = False then add the position where you want to add new value.
+        Args:
+            - value (Any): Put in the value you want to add.
+            - at_end (bool): If you want to add to the end of the list leave this blank. Defaults to adding at the end.
+            - position (int): If you choose ``at_end`` = False then add the position where you want to add new value.
         """
         new = Node(value)
 
@@ -66,8 +66,8 @@ class SinglyLinkedList:
     def removeAt(self, index=0):
         """
         Remove any node from linked list
-            Returns:
-                - value (Any): returns the value at the node
+        Returns:
+            - value (Any): returns the value at the node
         """
         if not 0 <= index <= self.size:
             raise IndexError(f"Directed position {index} out of bounds")
@@ -88,24 +88,24 @@ class SinglyLinkedList:
     def get_head(self):
         """
         Get the head node value of the linked list
-            Returns:
-                - The node value for the head
+        Returns:
+            - The node value for the head
         """
         return self.head
 
     def count(self):
         """
         Get the size of the linked list. How many Nodes are there in the linked list.
-            Returns:
-                - The number of nodes in the linked list.
+        Returns:
+            - The number of nodes in the linked list.
         """
         return self.size
 
     def isEmpty(self):
         """
         Checks if linked list is empty or not.
-            Returns:
-                - Bool: Return True if linkedlist is empty else False.
+        Returns:
+            - Bool: Return True if linkedlist is empty else False.
         """
         return True if self.size == 0 else False
 
@@ -145,14 +145,15 @@ class SinglyLinkedList:
     def __len__(self):
         """
         Alternate way of getting the size of the linked list
-            Returns:
-                Size of the linked list
+        Returns:
+            Size of the linked list
         """
         return self.size
 
     def __getitem__(self, index):
         if not 0 <= index <= self.size:
-            raise IndexError(f"You messed up boy. Index {index} is not available because it's out of bounds")
+            raise IndexError(
+                f"You messed up boy. Index {index} is not available because it's out of bounds")
         for y, node in enumerate(self):
             if y == index:
                 return node
@@ -160,8 +161,8 @@ class SinglyLinkedList:
     def __str__(self):
         """
         This is the string representation of the linked list values
-            Returns:
-                - String representation of the linked list values
+        Returns:
+            - String representation of the linked list values
         """
         array = []
         current = self.head
@@ -174,11 +175,67 @@ class SinglyLinkedList:
         return ''.join(array[:-1])
 
     def prettyprint(self):
-        # graph = pydot.Dot(graph_type='digraph')
-        # parent_node = pydot.Node(f'{self.get_head().value}')
-        # graph.add_node(parent_node)
-        #
-        # IMAGE = graph.create_png()
-        # return IMAGE
+        array = []
+        current = self.head
 
+        while current:
+            array.append(f"""
+            +--------+
+            |        |
+            |   {current.value}
+            |        |
+            +--------+
+            """)
+            #array.append(' --> ')
+            current = current.next
+
+        print(''.join(array[:-1]))
+
+
+
+# Doubly Linked List
+
+class _DNode(object):
+    """
+    Lightweight non public class for doubly linked node.
+    """
+    __slots__ = '_element' , '_prev' , '_next'
+
+    def __init__(self, element, prev, next):
+        """
+        Initialization of a doubly linked node.
+        Args:
+            - element: Element data
+            - prev: Previous Node
+            - next: Next Node.
+        """
+        self._element = element
+        self._prev = prev
+        self._next = next
+
+
+class DoublyLinkedListBase(object):
+    """
+    Base class for doubly linked list
+    """
+    def __init__(self):
+        self._header = _DNode(None, None, None)
+        self._trailer = _DNode(None, None, None)
+        self._header._next = self._trailer
+        self._trailer._prev = self._header
+        self.size = 0
+
+    def __len__(self):
+        return self.size
+
+    def isEmpty(self):
+        """
+        Returns if the list is empty
+        """
+        return self.size == 0
+
+    def add(self, element):
+        """
+        Add element at the end of list
+        """
         raise NotImplementedError
